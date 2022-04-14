@@ -35,12 +35,10 @@ const outputJSON = async function () {
 
 const syncNftsDB = async function (next_Token='start') {
     try {
+        console.log("start syncing to db")
         const data = await getCollection(next_Token)
         const nfts =data.data
-        for (let index = 0; index < nfts.length; index++) {
-            const saved = await NFTController.save(nfts[index])
-            console.log("saved: "+ saved.id)
-        }
+        const saved = await NFTController.saveAll(nfts)
         if(data.meta && data.meta.paging && data.meta.paging.next_page_token) {
             console.log("new next_token: "+ data.meta.paging.next_page_token)
             next_Token = data.meta.paging.next_page_token

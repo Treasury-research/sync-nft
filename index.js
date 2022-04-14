@@ -3,6 +3,8 @@ require("dotenv").config();
 const mongoose = require('mongoose')
 const debug = require('debug')('express-mongoose-es6-rest-api:index')
 const worker = require("./worker")
+const NFT = require('./nft/nft.model')
+
 // make bluebird default Promise
 Promise = require('bluebird') // eslint-disable-line no-global-assign
 
@@ -21,5 +23,5 @@ mongoose.connection.on('error', (ctx) => {
   throw new Error(`unable to connect to database: ${mongoUri}`)
 })
 
-// worker.syncNfts()
+// worker.syncNftsDB()
 worker.updateNFTlinks()

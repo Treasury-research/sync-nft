@@ -2,12 +2,31 @@ const NFT = require('./nft.model')
 const aws = require('../aws')
 const fs = require('fs');
 
-async function save(nft) {
+async function saveAll(nfts) {
+    try {
+        const saved = await NFT.create(nfts)
+        console.log(`saved: ${saved.length} entries`)
+        return saved
+    } catch (err){
+        if (err.code===11000) {
+            for (let index = 0; index < nfts.length; index++) {
+                await saveOne(nfts[index])
+            }
+            return true
+        } else {
+            console.log(err)
+            throw err
+        }
+    }
+}
+
+async function saveOne(nft) {
     try {
         let saved =  await NFT.findOne({id: nft.id})
         if (!saved) {
             saved = await NFT.create(nft)
         }
+        console.log(`saved: ${saved.id}`)
         return saved
     } catch (err){
         if (err.code===11000) {
@@ -29,17 +48,9 @@ const processObject = async function(nftObject) {
     return nftObject
 }
 
-const outputJSON = async function () {
-    const nfts = await NFT.find({synced: 1})
-    let data = JSON.stringify(nfts);
-    fs.writeFileSync('nfts.json', data);
-    console.log("syncing nfts finished")
-    process.exit(0)
-}
-
 async function updateS3Link() {
     try {
-        const nft = await NFT.findOne({synced:0})
+        const nft = await NFT.findOne({synced:0, image_url : { $regex: /http/, $options: 'i' }})
         if (nft) {
             const processed = await processObject(nft)
             processed.synced = 1
@@ -52,4 +63,4 @@ async function updateS3Link() {
         throw err
     }
 }
-module.exports = { save, updateS3Link }
+module.exports = { saveOne, saveAll, updateS3Link }
