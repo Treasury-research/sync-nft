@@ -1,0 +1,19 @@
+{
+  "name": "tr-sync-nft",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "version": "0.0.0",
+  "dependencies": {
+    "aws-sdk": "^2.1114.0",
+    "axios": "^0.26.1",
+    "bluebird": "^3.7.2",
+    "debug": "^4.3.3",
+    "dotenv": "^10.0.0",
+    "mongoose": "^6.2.11",
+    "puppeteer": "^13.5.2"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.4"
+  }
+}
