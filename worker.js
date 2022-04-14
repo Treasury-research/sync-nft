@@ -58,6 +58,7 @@ const updateNFTlinks = async function () {
     if (nft) {
         updateNFTlinks()
     } else {
+        puppet.closeBrowser()
         outputJSON()
     }
 }
